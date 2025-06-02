@@ -42,15 +42,22 @@ jobs:
             python -m pip install --upgrade pip
             pip install requests 2captcha-python
       - run:
-          name: Run 1point3acres signin
+          name: Debug 1point3acres signin
           command: |
-            python -m onepoint3acres.onepoint3acres
+            set -x
+            python -m onepoint3acres.onepoint3acres || {
+              echo "\n--- FAILURE DIAGNOSTICS ---"
+              echo "Check if your credentials or cookies are expired."
+              echo "Check if the daily question endpoint or logic has changed."
+              exit 1
+            }
 
 workflows:
-  # Allow manual triggers
   manual_trigger:
     jobs:
       - nodeseek:
+          context: checkincontext
+      - v2ex:
           context: checkincontext
       - onepoint3acres:
           context: checkincontext
