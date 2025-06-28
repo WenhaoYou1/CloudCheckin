@@ -95,7 +95,7 @@ https://github.com/timerring/CloudCheckin/blob/0b719258ab4f5f746b067798eb2a4185a
 <summary>Configure 1Point3Acres Check-in and Quiz</summary>
 
 1. Get the `cookie` from the 1Point3Acres website (for cookie acquisition methods, please refer to [COOKIE Acquisition Tutorial](https://blog.timerring.com/posts/the-way-to-get-cookie/))
-2. Add the `cookie` to repository secrets with the name `ONEPOINT3ACRES_COOKIE`
+2. Add the `cookie` to repository secrets with the name `ONEPOINT3ACRES_COOKIE` and `ONEPOINT3ACRES_COOKIE_2` (for more than one accounts)
 3. Top up and get an `api key` from [2captcha](https://2captcha.com/) (since 1Point3Acres check-in and quiz require Cloudflare Turnstile verification, we use 2captcha's API to solve the verification problem)
    - Note: 2captcha API requires payment, starting from $3, supports Alipay. Each successful verification costs about $0.00145, so $3 can be used 2068 times, approximately 2.83 years.
 4. Add the `api key` to repository secrets with the name `TWOCAPTCHA_APIKEY`
