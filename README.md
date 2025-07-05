@@ -119,7 +119,7 @@ https://github.com/timerring/CloudCheckin/blob/0b719258ab4f5f746b067798eb2a4185a
 <details>
 <summary>配置 Nodeseek 签到</summary>
 
-1. 从 Nodeseek 网站获取 `cookie`（获取方法请参考 [COOKIE 获取教程](https://blog.timerring.com/posts/the-way-to-get-cookie/)）
+1. 从 Nodeseek 网站获取 `cookie`（获取方法请参考 [COOKIE 获取教程](https://blog.timerring.com/posts/the-way-to-get-cookie/)）不要忘记勾选preserve log来查看对应请求的cookie
 2. 将 `cookie` 添加到仓库密钥中，命名为 `NODESEEK_COOKIE`
 </details>
 
