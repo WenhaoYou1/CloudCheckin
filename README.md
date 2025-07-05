@@ -5,7 +5,7 @@
     <img src="https://cdn.jsdelivr.net/gh/timerring/scratchpad2023/2024/2025-06-01-17-47-19.png" alt="workflow"  width="200" height="100"/>
   </picture>
 
-基于 CI/CD 以及 Cloudflare Workers 实现多平台自动签到以及答题。
+基于 CI/CD 以及 Cloudflare Workers 实现多平台自动签到以及答题
 
 [English Version](./README-en.md) |
 中文版本
