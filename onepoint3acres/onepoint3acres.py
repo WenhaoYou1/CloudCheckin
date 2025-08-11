@@ -28,6 +28,59 @@ class OnePointThreeAcres:
 			"Content-Type": "application/json",
 			"Referer": "https://www.1point3acres.com/"
 		}
+		self.random_say = [
+			"没有太多想说的",
+			"今天真的很绝望",
+			"什么时候我才可以上岸啊",
+			"什么时候才可以上岸!",
+			"真的想摆烂了哈哈哈哈",
+			"感觉一切都没有尽头",
+			"每天都像在原地打转",
+			"我真的累了...",
+			"希望明天会更好吧",
+			"是不是我不够努力",
+			"感觉看不到希望",
+			"再坚持一下下8?",
+			"要不就算了吧...",
+			"好想直接放假三个月",
+			"又是一事无成的一天",
+			"想静静想静静静静",
+			"今天好像被现实狠狠教育了",
+			"我是不是走错路了",
+			"努力好像没什么用",
+			"好想穿越到半年后",
+			"感觉自己像个废物",
+			"我需要一点奇迹",
+			"每天都在自我怀疑",
+			"什么时候才能轮到我啊",
+			"有点想放弃",
+			"好像什么都做不好",
+			"努力过头真的很累",
+			"要不今天就先这样吧",
+			"再这样下去我会疯掉",
+			"也许我该换个方向试试",
+			"突然有点想躺平",
+			"今天的我依旧在挣扎",
+			"上岸的日子遥遥无期",
+			"笑着笑着就哭了",
+			"我可能不适合这条路",
+			"今天依旧是废柴的一天",
+			"想过一切都放下的生活",
+			"压力好像要把我压垮了",
+			"什么时候能轮到我翻身啊",
+			"总觉得自己差一点点",
+			"是不是我太笨了",
+			"我选择相信明天会好一点",
+			"不想再卷了 也卷不过",
+			"有人能救救我吗",
+			"今天的心情是灰色的",
+			"我连摆烂都很认真",
+			"先吃顿好的吧",
+			"突然想逃离这里",
+			"也许明天就不一样了",
+			"今天的努力值拉满 但结果为零"
+		]
+
 
 	def daily_checkin(self):
 		result = self.solver.turnstile(sitekey=self.cf_capcha_site_key, url=self.checkin_page, useragent=self.user_agent)
@@ -37,7 +90,7 @@ class OnePointThreeAcres:
 		emoji_list = ['kx', 'ng', 'ym', 'wl', 'nu', 'ch', 'fd', 'yl', 'shuai']
 		body = {
 			"qdxq": random.choice(emoji_list),
-			"todaysay": "没有太多想说的",
+			"todaysay": random.choice(self.random_say),
 			"captcha_response": code,
 			"hashkey": "",
 			"version": 2
