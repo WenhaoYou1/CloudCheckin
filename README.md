@@ -5,13 +5,15 @@
     <img src="https://cdn.jsdelivr.net/gh/timerring/scratchpad2023/2024/2025-06-01-17-47-19.png" alt="workflow"  width="200" height="100"/>
   </picture>
 
-基于 CI/CD 以及 Cloudflare Workers 实现多平台自动签到以及答题
+基于 CI/CD 以及 Cloudflare Workers 实现多平台自动签到以及答题.
 
 [English Version](./README-en.md) |
 中文版本
+
 </div>
 
 ## 功能
+
 > 欢迎 :star:，添加更多平台欢迎 issue 或者 PR
 
 每天自动完成平台任务，完成以后会通过 telegram 机器人通知，如果失败则会直接通过 CircleCI 发送邮件通知。
@@ -37,7 +39,7 @@ sequenceDiagram
     participant CCI as CircleCI<br/>(CI/CD Pipeline)
     participant SP as Platforms
     participant TC as 2captcha
-    
+
     Note over User: Configure Github secrets only once
     User-->>CF: Auto deploy cloudlflare workers
     User-->>CCI: Auto sync the secrets to CircleCI
@@ -50,12 +52,12 @@ sequenceDiagram
 
         loop Loop platforms
             CCI->>+SP: Send Request checkin/QA<br/>(with Cookie)
-            
+
             alt Request captcha
                 SP->>+TC: request 2captcha
                 TC->>-SP: bypass captcha
             end
-            
+
             SP->>-CCI: Return Response
         end
 
@@ -80,8 +82,7 @@ Fork 本仓库到你自己的仓库，然后添加对应的配置项到仓库的
 
 详细的注册教程请见 [CloudCheckin Wiki](https://github.com/timerring/CloudCheckin/wiki/CircleCI-Registeration)。
 
-> [!IMPORTANT]
-> **注意 trigger 的 `CIRCLECI_WEBHOOK_URL` 拼接完成后填写在 Github Actions 的 secrets 中**。
+> [!IMPORTANT] > **注意 trigger 的 `CIRCLECI_WEBHOOK_URL` 拼接完成后填写在 Github Actions 的 secrets 中**。
 
 ### 申请 CircleCI Token
 
@@ -111,7 +112,7 @@ https://github.com/timerring/CloudCheckin/blob/0b719258ab4f5f746b067798eb2a4185a
 #### 配置 Telegram 通知
 
 1. 按照 [telegram bot](https://core.telegram.org/bots/features#botfather) 的说明创建一个 telegram 机器人并获取 `token`
-2. 将机器人添加为您的联系人并发送一条消息。然后访问 https://api.telegram.org/bot{TELEGRAM_TOKEN}/getUpdates 获取 `chat id`（将 `{TELEGRAM_TOKEN}` 替换为步骤1中获得的 token）
+2. 将机器人添加为您的联系人并发送一条消息。然后访问 https://api.telegram.org/bot{TELEGRAM_TOKEN}/getUpdates 获取 `chat id`（将 `{TELEGRAM_TOKEN}` 替换为步骤 1 中获得的 token）
 3. 将 `token` 和 `chat id` 添加到仓库密钥中，分别命名为 `TELEGRAM_TOKEN` 和 `TELEGRAM_CHAT_ID`
 
 #### 配置签到平台
@@ -119,10 +120,9 @@ https://github.com/timerring/CloudCheckin/blob/0b719258ab4f5f746b067798eb2a4185a
 <details>
 <summary>配置 Nodeseek 签到</summary>
 
-1. 从 Nodeseek 网站获取 `cookie`（获取方法请参考 [COOKIE 获取教程](https://blog.timerring.com/posts/the-way-to-get-cookie/)）不要忘记勾选preserve log来查看对应请求的cookie
+1. 从 Nodeseek 网站获取 `cookie`（获取方法请参考 [COOKIE 获取教程](https://blog.timerring.com/posts/the-way-to-get-cookie/)）不要忘记勾选 preserve log 来查看对应请求的 cookie
 2. 将 `cookie` 添加到仓库密钥中，命名为 `NODESEEK_COOKIE`
 </details>
-
 
 <details>
 <summary>配置 V2EX 签到</summary>
@@ -152,11 +152,11 @@ https://github.com/timerring/CloudCheckin/blob/0b719258ab4f5f746b067798eb2a4185a
 ## 常见问题
 
 1. 为什么要采用 CircleCI，不直接用 Github Actions？
-   
+
    直接用 Github Actions 容易导致潜在的仓库被封风险，尽管本项目一天只触发一次请求不像 upptime 等开源项目有超高的并发请求量，但是本着本分的原则，还是不要给 Github 添加过多负担。CircleCI 同样是优秀的 CI/CD 平台，Free plan 的 30,000 credits/mo, that’s up to 6,000 build mins 完全可以支撑起本项目的所有需求，另外 CircleCI 的不同 Project 间的 contexts 设计思想相较于一般的 CI/CD 有很大程度上的创新，更多用户使用并且熟悉 CircleCI，对于用户以及平台来说都是双方受益的。
 
 2. 为什么不采用 Cloudflare Worker 等 Serverless 函数计算？
-   
+
    已经尝试过 Cloudflare Worker，本地 wrangler dev 有效，但是 deploy Cloudflare Worker 之后，由于 Cloudflare edge 请求会带有明显的 cf 标志，很多平台已经限制了 Cloudflare Worker 的请求。至于更多的函数计算平台还在尝试中，有进展会同步在 Repo 里。当然，如果你对 Cloudflare Worker 的方式有兴趣，欢迎继续尝试的工作，我本地调试的 demo 已经放置于 `cloudflareworkers` 目录下。
 
 3. 为什么要切换到 Cloudflare Worker 作为 Webhook 触发器，不用 CircleCI 的 Scheduled？
@@ -169,6 +169,7 @@ https://github.com/timerring/CloudCheckin/blob/0b719258ab4f5f746b067798eb2a4185a
 > 如果你是 Python 用户，建议使用 `curl_cffi` 库而不是 `requests` 等库，`curl_cffi` 能够更精确地模拟浏览器发送请求，极大程度上防止网站风控。
 
 ## 参考
+
 - [curl_cffi](https://github.com/lexiforest/curl_cffi)
 - [2captcha](https://github.com/2captcha/2captcha-python)
 - [1point3acres](https://github.com/harryhare/1point3acres)
