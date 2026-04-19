@@ -19,7 +19,9 @@
 每天自动完成平台任务，完成以后会通过 telegram 机器人通知，如果失败则会直接通过 CircleCI 发送邮件通知。
 
 - **Nodeseek**
-  - 自动签到?
+  - 自动签到
+- **Deepflood**
+  - 自动签到
 - **V2EX**
   - 自动签到
 - **一亩三分地**
@@ -118,10 +120,10 @@ https://github.com/timerring/CloudCheckin/blob/0b719258ab4f5f746b067798eb2a4185a
 #### 配置签到平台
 
 <details>
-<summary>配置 Nodeseek 签到</summary>
+<summary>配置 Nodeseek/Deepflood 签到</summary>
 
-1. 从 Nodeseek 网站获取 `cookie`（获取方法请参考 [COOKIE 获取教程](https://blog.timerring.com/posts/the-way-to-get-cookie/)）不要忘记勾选 preserve log 来查看对应请求的 cookie
-2. 将 `cookie` 添加到仓库密钥中，命名为 `NODESEEK_COOKIE`
+1. 从 Nodeseek/Deepflood 网站获取 `cookie`（获取方法请参考 [COOKIE 获取教程](https://blog.timerring.com/posts/the-way-to-get-cookie/)）
+2. 将 `cookie` 添加到仓库密钥中，命名为 `NODESEEK_COOKIE`/`DEEPFLOOD_COOKIE`
 </details>
 
 <details>
@@ -148,6 +150,22 @@ https://github.com/timerring/CloudCheckin/blob/0b719258ab4f5f746b067798eb2a4185a
 
 > [!IMPORTANT]
 > 有时 cookie 会过期导致签到失败，如果遇到失败情况，请考虑重新获取 cookie 填入 Secrets，再手动执行 `Setup CircleCI Context and Secrets` workflow 同步 cookie 到 CircleCI。
+
+## 本地调试
+
+```bash
+# 安装依赖
+pip install -r requirements.txt
+
+# 复制环境变量模板并填入你的配置
+cp .env.localtest.example .env
+
+# 运行签到脚本
+python -m nodeseek.nodeseek
+python -m deepflood.deepflood
+python -m v2ex.v2ex
+python -m onepoint3acres.onepoint3acres
+```
 
 ## 常见问题
 

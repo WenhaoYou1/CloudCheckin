@@ -4,8 +4,8 @@ on:
   push:
     branches: [main]
     paths:
-      - '.github/workflows/**'
-      - '.circleci/config.yml'
+      - ".github/workflows/**"
+      - ".circleci/config.yml"
   workflow_dispatch:
 
 jobs:
@@ -58,3 +58,4 @@ jobs:
           store_secret "ONEPOINT3ACRES_COOKIE" "${{ secrets.ONEPOINT3ACRES_COOKIE }}"
           store_secret "ONEPOINT3ACRES_COOKIE_2" "${{ secrets.ONEPOINT3ACRES_COOKIE_2 }}"
           store_secret "TWOCAPTCHA_APIKEY" "${{ secrets.TWOCAPTCHA_APIKEY }}"
+          store_secret "DEEPFLOOD_COOKIE" "${{ secrets.DEEPFLOOD_COOKIE }}"

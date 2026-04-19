@@ -9,10 +9,10 @@ from telegram.notify import send_tg_notification
 load_dotenv()
 
 # Get COOKIE from environment variable, multiple cookies separated by &
-cookies = os.environ.get('NODESEEK_COOKIE', '').strip()
+cookies = os.environ.get('DEEPFLOOD_COOKIE', '').strip()
 
 if not cookies:
-    raise ValueError("Environment variable NODESEEK_COOKIE is not set")
+    raise ValueError("Environment variable DEEPFLOOD_COOKIE is not set")
     sys.exit(1)
 
 # Split multiple cookies by & to form a list
@@ -21,8 +21,8 @@ cookie_list = cookies.split('&')
 # Request headers
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
-    'Origin': 'https://www.nodeseek.com',
-    'Referer': 'https://www.nodeseek.com/board',
+    'Origin': 'https://www.deepflood.com',
+    'Referer': 'https://www.deepflood.com/board',
     'Content-Type': 'application/json',
 }
 
@@ -40,7 +40,7 @@ for idx, cookie in enumerate(cookie_list):
     
     try:
         # random=true means get a random bonus
-        url = 'https://www.nodeseek.com/api/attendance?random=true'
+        url = 'https://www.deepflood.com/api/attendance?random=true'
         response = requests.post(url, headers=headers, impersonate="chrome136")
         
         # Output the status code and response content
@@ -49,17 +49,17 @@ for idx, cookie in enumerate(cookie_list):
         
         # Check if the check-in is successful based on the response content
         if response.status_code == 200:
-            success_message = f"NODESEEK account {idx+1} check-in successful"
+            success_message = f"DEEPFLOOD account {idx+1} check-in successful"
             print(success_message, flush=True)
             send_tg_notification(success_message)
         else:
-            fail_message = f"NODESEEK account {idx+1} check-in failed, response content: {response.text}"
+            fail_message = f"DEEPFLOOD account {idx+1} check-in failed, response content: {response.text}"
             print(fail_message, flush=True)
             send_tg_notification(fail_message)
             sys.exit(1)
     
     except Exception as e:
-        error_message = f"NODESEEK account {idx+1} check-in process error: {e}"
+        error_message = f"DEEPFLOOD account {idx+1} check-in process error: {e}"
         print(error_message, flush=True)
         send_tg_notification(error_message)
         sys.exit(1)

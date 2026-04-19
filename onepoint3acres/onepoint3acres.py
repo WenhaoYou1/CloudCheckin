@@ -6,8 +6,11 @@ import os
 import requests
 import http.cookies
 import time
+from dotenv import load_dotenv
 from .questions import questions
 from telegram.notify import send_tg_notification
+
+load_dotenv()
 
 class OnePointThreeAcres:
 	def __init__(self, cookie: str, solver: TwoCaptcha):
