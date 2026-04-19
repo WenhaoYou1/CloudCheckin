@@ -9,9 +9,11 @@ Multi-platform automatic check-in and quiz automation based on CI/CD and Cloudfl
 
 English Version |
 [中文版本](./README.md)
+
 </div>
 
 ## Features
+
 > Welcome to :star: this project. Feel free to submit issues or PRs to add more platforms.
 
 Automatically complete platform tasks daily. After completion, notifications will be sent via Telegram bot. If tasks fail, email notifications will be sent directly through CircleCI.
@@ -124,15 +126,15 @@ python -m onepoint3acres.onepoint3acres
 ## FAQ
 
 1. **Why use CircleCI instead of GitHub Actions directly?**
-   
+
    Using GitHub Actions directly may lead to potential repository banning risks. Although this project only triggers requests once a day and doesn't have high concurrent request volumes like upptime and other open-source projects, we still follow the principle of not adding excessive burden to GitHub. CircleCI is also an excellent CI/CD platform. The Free plan's 30,000 credits/mo (up to 6,000 build mins) can fully support all the requirements of this project. Additionally, CircleCI's contexts design between different Projects is quite innovative compared to general CI/CD platforms. More users using and becoming familiar with CircleCI benefits both users and the platform.
 
 2. **Why not use Cloudflare Worker or other Serverless computing functions?**
-   
+
    We have tried Cloudflare Worker. Local `wrangler dev` works, but after deploying to Cloudflare Worker, since Cloudflare edge requests carry obvious cf flags, many platforms have restricted Cloudflare Worker requests. We are still trying more function computing platforms, and any progress will be synchronized in the repository. Of course, if you are interested in the Cloudflare Worker approach, you are welcome to continue the work. The demo I debugged locally has been placed in the `cloudflareworkers` directory.
 
 3. **Why switch to Cloudflare Worker as a Webhook trigger instead of using CircleCI's Scheduled?**
-   
+
    According to [CircleCI's latest terms](https://circleci.com/docs/version-control-system-integration-overview/#pipeline-triggers-and-integrations), Scheduled pipelines will not be available for personal repositories under `GitHub App`, so we need to switch to [Custom Webhook](https://circleci.com/docs/custom-webhooks/) format, using Cloudflare Worker as a scheduled trigger. Of course, you can also use [other ways to call Webhook](https://circleci.com/docs/triggers-overview/#trigger-a-pipeline-from-a-custom-webhook), just need to call the Webhook interface regularly. Here I use Cloudflare Worker as the scheduled trigger.
 
 ## Contributing
@@ -142,6 +144,7 @@ Welcome to submit platforms you need, no language restrictions.
 > If you are a Python user, it is recommended to use the `curl_cffi` library instead of `requests` and other libraries. `curl_cffi` can more accurately simulate browser requests, greatly preventing website risk control.
 
 ## References
+
 - [curl_cffi](https://github.com/lexiforest/curl_cffi)
 - [2captcha](https://github.com/2captcha/2captcha-python)
 - [1point3acres](https://github.com/harryhare/1point3acres)
