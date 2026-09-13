@@ -25,6 +25,8 @@ Automatically complete platform tasks daily. After completion, notifications wil
 - **1Point3Acres**
   - Automatic check-in
   - Automatic quiz completion
+- **SakuraFrp**
+  - Automatic login and check-in
 
 ## Architecture
 
@@ -104,9 +106,25 @@ https://github.com/timerring/CloudCheckin/blob/0b719258ab4f5f746b067798eb2a4185a
 
 </details>
 
+<details>
+<summary>Configure SakuraFrp check-in</summary>
+
+1. Register a [SakuraFrp](https://www.natfrp.com/) account and get your login username and password.
+2. Add your username and password to the repository secrets with the names `SAKURAFRP_USERNAME` and `SAKURAFRP_PASSWORD`.
+3. Get an `api key` from the [MiMo Open Platform](https://platform.xiaomimimo.com/) (SakuraFrp check-in requires a GeeTest 9-grid captcha, so the MiMo vision model is used to recognize it).
+   - MiMo `mimo-v2.5` is pay-per-use (¥1/M input tokens + ¥2/M output tokens). Each check-in consumes ~6000 tokens, costing approximately **¥0.01**.
+4. Add the `api key` to the repository secrets with the name `SAKURAFRP_MIMO_APIKEY`.
+
+> Uses pure HTTP protocol to solve GeeTest v3 (AES-CBC + RSA encryption). No Playwright/browser needed, each check-in takes only 2-3 seconds.
+
+</details>
+
 #### Sync Configuration
 
 After configuring all content, please manually execute the `Setup CircleCI Context and Secrets` and `Deploy Cloudflare Worker` workflows once to ensure that configuration secrets are correctly synchronized to CircleCI contexts secrets through CircleCI CLI, and that the Cloudflare Worker is properly deployed. (Actions -> `Setup CircleCI Context and Secrets` -> `Run workflow` and Actions -> `Deploy Cloudflare Worker` -> `Run workflow`)
+
+> [!IMPORTANT]
+> Expired cookies or login credentials can cause check-in failures. Update the corresponding repository Secrets, then manually run the `Setup CircleCI Context and Secrets` workflow to sync the configuration to CircleCI.
 
 ## Local Development
 
@@ -121,19 +139,24 @@ cp .env.localtest.example .env
 python -m nodeseek.nodeseek
 python -m v2ex.v2ex
 python -m onepoint3acres.onepoint3acres
+python -m sakurafrp.sakurafrp
 ```
 
 ## FAQ
 
-1. **Why use CircleCI instead of GitHub Actions directly?**
+1. **What should I do when check-in reports `The cookie is overdated` or the account login state has expired?**
+
+   Obtain a fresh Cookie for the affected platform and update its GitHub Actions repository Secret. Then go to `Actions` and manually run the `Setup CircleCI Context and Secrets` workflow once to synchronize the updated variable to the CircleCI Context.
+
+2. **Why use CircleCI instead of GitHub Actions directly?**
 
    Using GitHub Actions directly may lead to potential repository banning risks. Although this project only triggers requests once a day and doesn't have high concurrent request volumes like upptime and other open-source projects, we still follow the principle of not adding excessive burden to GitHub. CircleCI is also an excellent CI/CD platform. The Free plan's 30,000 credits/mo (up to 6,000 build mins) can fully support all the requirements of this project. Additionally, CircleCI's contexts design between different Projects is quite innovative compared to general CI/CD platforms. More users using and becoming familiar with CircleCI benefits both users and the platform.
 
-2. **Why not use Cloudflare Worker or other Serverless computing functions?**
+3. **Why not use Cloudflare Worker or other Serverless computing functions?**
 
-   We have tried Cloudflare Worker. Local `wrangler dev` works, but after deploying to Cloudflare Worker, since Cloudflare edge requests carry obvious cf flags, many platforms have restricted Cloudflare Worker requests. We are still trying more function computing platforms, and any progress will be synchronized in the repository. Of course, if you are interested in the Cloudflare Worker approach, you are welcome to continue the work. The demo I debugged locally has been placed in the `cloudflareworkers` directory.
+   We have tried Cloudflare Worker. Local `wrangler dev` works, but after deploying to Cloudflare Worker, since Cloudflare edge requests carry obvious cf flags, many platforms have restricted Cloudflare Worker requests.
 
-3. **Why switch to Cloudflare Worker as a Webhook trigger instead of using CircleCI's Scheduled?**
+4. **Why switch to Cloudflare Worker as a Webhook trigger instead of using CircleCI's Scheduled?**
 
    According to [CircleCI's latest terms](https://circleci.com/docs/version-control-system-integration-overview/#pipeline-triggers-and-integrations), Scheduled pipelines will not be available for personal repositories under `GitHub App`, so we need to switch to [Custom Webhook](https://circleci.com/docs/custom-webhooks/) format, using Cloudflare Worker as a scheduled trigger. Of course, you can also use [other ways to call Webhook](https://circleci.com/docs/triggers-overview/#trigger-a-pipeline-from-a-custom-webhook), just need to call the Webhook interface regularly. Here I use Cloudflare Worker as the scheduled trigger.
 
@@ -150,3 +173,4 @@ Welcome to submit platforms you need, no language restrictions.
 - [1point3acres](https://github.com/harryhare/1point3acres)
 - [V2EX](https://github.com/CruiseTian/action-hub)
 - [nodeseek](https://github.com/xinycai/nodeseek_signin)
+- [SakuraFRP HTTP Protocol (GeeTest v3 solve)](https://github.com/lyon-le/sakurafrp-auto-sign/blob/main/Solve.md)

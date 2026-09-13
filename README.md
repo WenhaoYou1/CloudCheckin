@@ -27,6 +27,8 @@
 - **一亩三分地**
   - 自动签到
   - 自动答题
+- **SakuraFrp**
+  - 自动登录并签到
 
 ## 架构及时序图
 
@@ -144,12 +146,25 @@ https://github.com/timerring/CloudCheckin/blob/0b719258ab4f5f746b067798eb2a4185a
 4. 将 `api key` 添加到仓库密钥中，命名为 `TWOCAPTCHA_APIKEY`
 </details>
 
+<details>
+<summary>配置 SakuraFrp 签到</summary>
+
+1. 注册 [SakuraFrp](https://www.natfrp.com/) 账号，获取登录用户名和密码
+2. 将用户名和密码添加到仓库密钥中，命名为 `SAKURAFRP_USERNAME` 和 `SAKURAFRP_PASSWORD`
+3. 从 [MiMo 开放平台](https://platform.xiaomimimo.com/) 获取 `api key`（由于 SakuraFrp 签到需要通过 GeeTest 九宫格验证码，因此这里使用 MiMo 视觉模型识别验证码）
+   - MiMo `mimo-v2.5` 模型按量计费（¥1/百万输入 token + ¥2/百万输出 token），每次签到约消耗 6000 token，约 **¥0.01**。
+4. 将 `api key` 添加到仓库密钥中，命名为 `SAKURAFRP_MIMO_APIKEY`
+
+> 采用纯 HTTP 协议解决 GeeTest v3 验证码（AES-CBC + RSA 加密），无需 Playwright/浏览器，每次签到仅需 2-3 秒。
+
+</details>
+
 #### 同步配置
 
 配置完成所有内容后，请手动执行一次 `Setup CircleCI Context and Secrets` 以及 `Deploy Cloudflare Worker` workflow 确保配置 secrets 通过 CircleCI CLI 正确同步至 CircleCI contexts secrets，并将 Cloudflare Worker 正确部署。（Actions -> `Setup CircleCI Context and Secrets` -> `Run workflow` 以及 Actions -> `Deploy Cloudflare Worker` -> `Run workflow`）
 
 > [!IMPORTANT]
-> 有时 cookie 会过期导致签到失败，如果遇到失败情况，请考虑重新获取 cookie 填入 Secrets，再手动执行 `Setup CircleCI Context and Secrets` workflow 同步 cookie 到 CircleCI。
+> Cookie 或登录凭据失效会导致签到失败。请更新对应平台的仓库 Secrets，再手动执行 `Setup CircleCI Context and Secrets` workflow 将配置同步到 CircleCI。
 
 ## 本地调试
 
@@ -165,19 +180,24 @@ python -m nodeseek.nodeseek
 python -m deepflood.deepflood
 python -m v2ex.v2ex
 python -m onepoint3acres.onepoint3acres
+python -m sakurafrp.sakurafrp
 ```
 
 ## 常见问题
 
-1. 为什么要采用 CircleCI，不直接用 Github Actions？
+1. 签到提示 `The cookie is overdated` 或账号登录状态失效怎么办？
+
+   重新获取对应平台的 Cookie，并更新仓库中的 GitHub Actions Secret。然后前往 `Actions`，手动运行一次 `Setup CircleCI Context and Secrets` workflow，这一步会自动将更新后的变量同步到 CircleCI Context，然后所有功能就会恢复正常。
+
+2. 为什么要采用 CircleCI，不直接用 Github Actions？
 
    直接用 Github Actions 容易导致潜在的仓库被封风险，尽管本项目一天只触发一次请求不像 upptime 等开源项目有超高的并发请求量，但是本着本分的原则，还是不要给 Github 添加过多负担。CircleCI 同样是优秀的 CI/CD 平台，Free plan 的 30,000 credits/mo, that’s up to 6,000 build mins 完全可以支撑起本项目的所有需求，另外 CircleCI 的不同 Project 间的 contexts 设计思想相较于一般的 CI/CD 有很大程度上的创新，更多用户使用并且熟悉 CircleCI，对于用户以及平台来说都是双方受益的。
 
-2. 为什么不采用 Cloudflare Worker 等 Serverless 函数计算？
+3. 为什么不采用 Cloudflare Worker 等 Serverless 函数计算？
 
-   已经尝试过 Cloudflare Worker，本地 wrangler dev 有效，但是 deploy Cloudflare Worker 之后，由于 Cloudflare edge 请求会带有明显的 cf 标志，很多平台已经限制了 Cloudflare Worker 的请求。至于更多的函数计算平台还在尝试中，有进展会同步在 Repo 里。当然，如果你对 Cloudflare Worker 的方式有兴趣，欢迎继续尝试的工作，我本地调试的 demo 已经放置于 `cloudflareworkers` 目录下。
+   已经尝试过 Cloudflare Worker，本地 wrangler dev 有效，但是 deploy Cloudflare Worker 之后，由于 Cloudflare edge 请求会带有明显的 cf 标志，很多平台已经限制了 Cloudflare Worker 的请求。
 
-3. 为什么要切换到 Cloudflare Worker 作为 Webhook 触发器，不用 CircleCI 的 Scheduled？
+4. 为什么要切换到 Cloudflare Worker 作为 Webhook 触发器，不用 CircleCI 的 Scheduled？
    根据 [CircleCI 的最新条款](https://circleci.com/docs/version-control-system-integration-overview/#pipeline-triggers-and-integrations)，Scheduled pipelines 将不对 `GitHub App` 下的个人仓库开放，因此需要切换到 [Custom Webhook](https://circleci.com/docs/custom-webhooks/) 的形式，通过 Cloudflare Worker 作为定时触发器，当然你也可以采用[其他方式调用 Webhook](https://circleci.com/docs/triggers-overview/#trigger-a-pipeline-from-a-custom-webhook)，只需要定时调用 Webhook 的接口即可，这里我采用了 Cloudflare Worker 作为定时触发器。
 
 ## 贡献
@@ -193,3 +213,4 @@ python -m onepoint3acres.onepoint3acres
 - [1point3acres](https://github.com/harryhare/1point3acres)
 - [V2EX](https://github.com/CruiseTian/action-hub)
 - [nodeseek](https://github.com/xinycai/nodeseek_signin)
+- [SakuraFRP HTTP Protocol (GeeTest v3 solve)](https://github.com/lyon-le/sakurafrp-auto-sign/blob/main/Solve.md)

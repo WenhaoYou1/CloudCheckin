@@ -14,7 +14,8 @@ jobs:
     steps:
       - name: Install CircleCI CLI
         run: |
-          curl -fLSs https://raw.githubusercontent.com/CircleCI-Public/circleci-cli/master/install.sh | sudo bash
+          curl -fLSs https://raw.githubusercontent.com/CircleCI-Public/circleci-cli/master/install.sh | sudo env VERSION=0.1.38646 bash
+          circleci version
 
       - name: Setup CircleCI CLI
         run: |
@@ -59,3 +60,6 @@ jobs:
           store_secret "ONEPOINT3ACRES_COOKIE_2" "${{ secrets.ONEPOINT3ACRES_COOKIE_2 }}"
           store_secret "TWOCAPTCHA_APIKEY" "${{ secrets.TWOCAPTCHA_APIKEY }}"
           store_secret "DEEPFLOOD_COOKIE" "${{ secrets.DEEPFLOOD_COOKIE }}"
+          store_secret "SAKURAFRP_USERNAME" "${{ secrets.SAKURAFRP_USERNAME }}"
+          store_secret "SAKURAFRP_PASSWORD" "${{ secrets.SAKURAFRP_PASSWORD }}"
+          store_secret "SAKURAFRP_MIMO_APIKEY" "${{ secrets.SAKURAFRP_MIMO_APIKEY }}"
