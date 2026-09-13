@@ -278,6 +278,7 @@ if __name__ == "__main__":
 		print(f"[INFO] Account 1 answer_daily_question_status={answer_daily_question_status}")
 
 
+
 		# For Account 2
 		# Create the instance
 		print("[INFO] start Account 2")
@@ -299,6 +300,8 @@ if __name__ == "__main__":
 		print("[INFO] Account 2: answer_daily_question()")
 		answer_daily_question_status2 = acres2.answer_daily_question(question_id2, answer_id2)
 		print(f"[INFO] Account 2 answer_daily_question_status={answer_daily_question_status2}")
+
+		
 		# if not answer_daily_question_status and not answer_daily_question_status2:
 		# 	raise ValueError("Fail to answer daily question for both two accounts")
 		# if not answer_daily_question_status:
