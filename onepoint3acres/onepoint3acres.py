@@ -252,40 +252,55 @@ if __name__ == "__main__":
 		
 		# initialize the solver
 		solver = TwoCaptcha(TwoCaptcha_apikey)
+		print("[INFO] initialize solver")
 		
 		# For Account 1
 		# Create the instance
+		print("[INFO] start Account 1")
 		acres = OnePointThreeAcres(cookie, solver)
 
 		# daily checkin
+		print("[INFO] Account 1: daily_checkin()")
 		daily_checkin_status = acres.daily_checkin()
+		print(f"[INFO] Account 1 daily_checkin_status={daily_checkin_status}")
 		if not daily_checkin_status:
 			raise ValueError("Fail to check in the 1point3acres (1st account)")
 		# daily question
+		print("[INFO] Account 1: get_daily_task_answer()")
 		question_id, answer_id = acres.get_daily_task_answer()
+		print(f"[INFO] Account 1 question_id={question_id}, answer_id={answer_id}")
 		if not question_id or not answer_id:
-			raise ValueError("Fail to get daily question for Account 1 (Main)")
+			raise ValueError("Fail to get daily question for 1st account)")
 		time.sleep(random.uniform(1, 50))
+		print("[INFO] Account 1: answer_daily_question()")
 		answer_daily_question_status = acres.answer_daily_question(question_id, answer_id)
+		print(f"[INFO] Account 1 answer_daily_question_status={answer_daily_question_status}")
 		if not answer_daily_question_status:
-			raise ValueError("Fail to answer daily question for Account 1 (Main)")
+			raise ValueError("Fail to answer daily question for 1st account")
 		
 		# For Account 2
 		# Create the instance
+		print("[INFO] start Account 2")
 		acres2 = OnePointThreeAcres(cookie2, solver)
 
 		# daily checkin
+		print("[INFO] Account 2: daily_checkin()")
 		daily_checkin_status2 = acres2.daily_checkin()
+		print(f"[INFO] Account 2 daily_checkin_status={daily_checkin_status2}")
 		if not daily_checkin_status2:
 			raise ValueError("Fail to check in the 1point3acres (2nd account)")
 		# daily question
+		print("[INFO] Account 2: get_daily_task_answer()")
 		question_id2, answer_id2 = acres2.get_daily_task_answer()
+		print(f"[INFO] Account 2 question_id={question_id2}, answer_id={answer_id2}")
 		if not question_id2 or not answer_id2:
-			raise ValueError("Fail to get daily question for Account 2")
+			raise ValueError("Fail to get daily question for 2nd account")
 		time.sleep(random.uniform(1, 50))
+		print("[INFO] Account 2: answer_daily_question()")
 		answer_daily_question_status2 = acres2.answer_daily_question(question_id2, answer_id2)
+		print(f"[INFO] Account 2 answer_daily_question_status={answer_daily_question_status2}")
 		if not answer_daily_question_status2:
-			raise ValueError("Fail to answer daily question for Account 2")
+			raise ValueError("Fail to answer daily question for 2nd account")
 		
 	except Exception as err:
 		print(err, flush=True)
